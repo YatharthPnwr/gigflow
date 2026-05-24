@@ -16,9 +16,10 @@ services:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
+      args:
+        # Note: Set this in your environment or a root .env file before building
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:5000/api}
     container_name: gigflow-frontend
     ports:
-      - "5173:5173"
-    env_file:
-      - ./Frontend/.env
+      - "5173:80" # Map host 5173 to container 80 (nginx)
     restart: unless-stopped
