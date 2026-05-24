@@ -25,7 +25,7 @@ const Dashboard = () => {
 
   const activeFilters = { ...filters, search: debouncedSearch || undefined };
 
-  const { data, isLoading, isError } = useLeads(activeFilters);
+  const { data, isLoading, isError, isFetching } = useLeads(activeFilters);
 
   const createLead = useCreateLead();
   const updateLead = useUpdateLead();
@@ -57,7 +57,10 @@ const Dashboard = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Leads</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Leads</h1>
+              {isFetching && !isLoading && <Spinner className="w-5 h-5" />}
+            </div>
             {data && <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{data.pagination.total} total leads</p>}
           </div>
           <div className="flex gap-3">
@@ -102,12 +105,19 @@ const Dashboard = () => {
 
           {!isLoading && !isError && data && data.data.length > 0 && (
             <>
-              <LeadTable
-                leads={data.data}
-                onView={setViewLead}
-                onEdit={setEditLead}
-                onDelete={handleDelete}
-              />
+              <div className="relative">
+                {isFetching && !isLoading && (
+                  <div className="absolute inset-0 bg-white/50 dark:bg-gray-900/50 z-10 flex items-center justify-center backdrop-blur-[1px]">
+                    <Spinner />
+                  </div>
+                )}
+                <LeadTable
+                  leads={data.data}
+                  onView={setViewLead}
+                  onEdit={setEditLead}
+                  onDelete={handleDelete}
+                />
+              </div>
               <Pagination
                 pagination={data.pagination}
                 onPageChange={(page) => setFilters((f) => ({ ...f, page }))}
