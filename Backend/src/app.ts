@@ -6,7 +6,15 @@ import errorMiddleware from './middleware/error.middleware';
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL ?? 'http://localhost:5173', credentials: true }));
+const origin = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : ['http://localhost:5173'];
+
+app.use(cors({ 
+  origin: origin, 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
 app.get('/health', (_req, res) => res.json({ success: true, message: 'Server is running' }));

@@ -10,6 +10,8 @@ services:
       - "5000:5000"
     env_file:
       - ./Backend/.env
+    environment:
+      - CLIENT_URL=${CLIENT_URL:-http://localhost:5173}
     restart: unless-stopped
 
   frontend:
