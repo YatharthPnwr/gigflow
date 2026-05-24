@@ -1,4 +1,13 @@
 import 'dotenv/config';
+import crypto from 'crypto';
+
+// Polyfill global crypto for mongodb driver if needed
+if (!global.crypto) {
+  Object.defineProperty(global, 'crypto', {
+    value: crypto.webcrypto,
+  });
+}
+
 import app from './app';
 import connectDB from './config/db';
 
